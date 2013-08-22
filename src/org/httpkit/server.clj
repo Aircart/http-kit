@@ -70,7 +70,9 @@
 (extend-type AsyncChannel
   Channel
   (open? [ch] (not (.isClosed ch)))
-  (close [ch] (.serverClose ch 1000))
+  (close
+    ([ch] (.serverClose ch 1000))
+    ([ch status] (.serverClose ch status)))
   (websocket? [ch] (.isWebSocket ch))
   (send!
     ([ch data] (.send ch data (not (websocket? ch))))

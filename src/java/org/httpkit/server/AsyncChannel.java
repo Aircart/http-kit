@@ -88,6 +88,7 @@ public class AsyncChannel {
         return ByteBuffer.wrap(s.getBytes());
     }
 
+    // used only by HTTP Streaming
     private void firstWrite(Object data, boolean close) throws IOException {
         ByteBuffer buffers[];
         int status = 200;
@@ -174,11 +175,12 @@ public class AsyncChannel {
         }
     }
 
+    // used only by HTTP Streaming
     public void onClose(int status) {
         if (unsafe.compareAndSwapInt(this, closedRanOffset, 0, 1)) {
             IFn f = closeHandler;
             if (f != null) {
-                f.invoke(readable(status));
+                f.invoke(readable(status), status);
             }
         }
     }
@@ -196,7 +198,7 @@ public class AsyncChannel {
         }
         IFn f = closeHandler;
         if (f != null) {
-            f.invoke(readable(0)); // server close is 0
+            f.invoke(readable(0), status); // server close is 0
         }
         return true;
     }
