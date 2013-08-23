@@ -30,7 +30,7 @@
    and WebSocket."
 
   (open? [ch] "Returns true iff channel is open.")
-  (close [ch]
+  (close [ch] [ch status]
     "Closes the channel. Idempotent: returns true if the channel was actually
     closed, or false if it was already closed.")
   (websocket? [ch] "Returns true iff channel is a WebSocket.")
